@@ -2,22 +2,67 @@
 <html>
 <head>
 <link rel="stylesheet" href="mystyle.css">
-</head>
-<body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
-    <nav><a href="">All Messages</a></nav>
-    <h1>Leave me a message...</h1>
+<script >
+    const url = "https://messagebox-inlxkldana-de.a.run.app"
+    // const url = "http://localhost:3001"
+    const getMessage = ()=>{
+        axios.get(`${url}/api/messages?offser=0&limit=100`).then((response)=>{
+            let messages = response.data.messages
+            let list = ''
+            for(const item of messages){
+                let temp = JSON.parse(item)
+                list = list + `
+                    <li class="message">
+                     <p class="messageTitle">${temp.user} @ ${temp.time}</p>${temp.message}</p>
+                    </li>
+                `
+            }
+            console.log(list)
+            document.getElementById('messageList').innerHTML= list
+
+        }).catch((error)=>{console.error})
+    }
+
+    const postMessage = () => {
+        const user = document.getElementById('user').value
+        const message = document.getElementById('message').value
+
+        if (user==='' || user===undefined) {
+            swal("輸入錯誤","請輸入名稱");
+            return
+        }
+
+        if (message==='' || message===undefined) {
+            swal("輸入錯誤","請輸入留言");
+            return
+        }
+        axios.post(`${url}/api/message`,{user,message}).then((response)=>{console.log(response.data); getMessage(); location.href="#board"}
+
+        ).catch((error)=>{console.error})
+    }
+
+
+</script>
+</head>
+<body onload="getMessage()">
+    <nav><a href="#board">All Messages</a></nav>
+    <h1>Leave A Message Here</h1>
     <div class="bubbleContainer">
       <div class="bubbleBody">
-        <form id="message" action="addMessage.php" method="post">
-          <input type="text" name="formUsername" placeholder="Your name"/>
-          <textarea name="formMessage" placeholder="Message here"></textarea>
+        <form id="messageForm" >
+          <input id="user" type="text" name="formUsername" placeholder="Your name"/>
+          <textarea id="message" name="formMessage" placeholder="Message here" ></textarea>
         </form>
+        <!-- <form  type="hidden"></form> -->
       </div>
     </div>
-    <button class="btnSendMessage" type="submit" form="message">Send</button>
-    <h1>Message Board</h1>
-    <ul class="messageList">
+    <button class="btnSendMessage" type="button" value="send"  form="message" onClick="postMessage()">Send</button>
+    <div id="board"></div>  
+    <h1 >Message Board</h1>
+    <ul class="messageList" id="messageList">
       <li class="message">
         <p class="messageTitle">Message Title</p>
         <p class="messageContent">里無相世向壓長物臺裡其發院好性全西是龍年立不他早、查向緊人化生今育投，一聽難那……也家球民回一長個為天，資自實心上氣年過正天快系去工求讀怎天化充臺後小全什、文裝怕修還走角書類背險命也成度亮現，活著生什，心園始的致都司自車！微造紀企，指足笑老上由人民得進近事愛商遠此一究己式不輕中酒資？保光車常，到必這和活亞五多口，球的車級蘭散。說院美還好理太西臺客狀位之需少樂們？石問種物做起的備；選這只個年樣是關心國得紙氣她府觀資局臺樣代物病，汽兩中備北晚他頭給信，溫果表失個司如眼定麼！</p>
